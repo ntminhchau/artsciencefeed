@@ -1,0 +1,28 @@
+name: Daily Science and Art Bot
+
+on:
+  schedule:
+    - cron: '0 1 * * *' # Chạy vào 8:00 sáng giờ VN (1:00 UTC)
+  workflow_dispatch: # Cho phép bạn bấm nút chạy thử thủ công
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install requests feedparser
+
+      - name: Run bot
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python bot.py
